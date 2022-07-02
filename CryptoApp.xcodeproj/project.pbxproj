@@ -18,6 +18,7 @@
 		7C6AA83B28700C54000E1855 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6AA83A28700C54000E1855 /* Home.swift */; };
 		7C6AA83D28701BDC000E1855 /* LineGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6AA83C28701BDC000E1855 /* LineGraph.swift */; };
 		7CF8416C287051DD003FE8A9 /* AppViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF8416B287051DD003FE8A9 /* AppViewModel.swift */; };
+		7CF8416F287060CB003FE8A9 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 7CF8416E287060CB003FE8A9 /* SDWebImageSwiftUI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +60,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7CF8416F287060CB003FE8A9 /* SDWebImageSwiftUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -179,6 +181,9 @@
 			dependencies = (
 			);
 			name = CryptoApp;
+			packageProductDependencies = (
+				7CF8416E287060CB003FE8A9 /* SDWebImageSwiftUI */,
+			);
 			productName = CryptoApp;
 			productReference = 7C6AA80828700C00000E1855 /* CryptoApp.app */;
 			productType = "com.apple.product-type.application";
@@ -251,6 +256,9 @@
 				Base,
 			);
 			mainGroup = 7C6AA7FF28700C00000E1855;
+			packageReferences = (
+				7CF8416D287060CB003FE8A9 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
+			);
 			productRefGroup = 7C6AA80928700C00000E1855 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -617,6 +625,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		7CF8416D287060CB003FE8A9 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		7CF8416E287060CB003FE8A9 /* SDWebImageSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7CF8416D287060CB003FE8A9 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
+			productName = SDWebImageSwiftUI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 7C6AA80028700C00000E1855 /* Project object */;
 }
