@@ -46,6 +46,18 @@ struct Home: View {
                 VStack(alignment: .leading, spacing: 8) {
                     Text(coin.current_price.convertToCurrency())
                         .font(.largeTitle.bold())
+                    
+                    //MARK: - Profit/Loss
+                    Text("\(coin.price_change > 0 ? "+" : "")\(String(format: "%.2f", coin.price_change))")
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 5)
+                        .background(
+                            Capsule()
+                                .fill(coin.price_change < 0 ? Color("Red") : Color("Green"))
+                        )
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 
@@ -72,7 +84,7 @@ struct Home: View {
             HStack(spacing: 10) {
                 ForEach(coins) { coin in
                     Text(coin.symbol.uppercased())
-                        .foregroundColor(currentCoin == coin.symbol.uppercased() ? .black : .gray)
+                        .foregroundColor(currentCoin == coin.symbol.uppercased() ? .white : .gray)
                         .font(.callout.bold())
                         .padding(.vertical, 6)
                         .padding(.horizontal, 20)
@@ -96,7 +108,7 @@ struct Home: View {
     //MARK: - Graph View
     func GraphView(coin: CryptoModel) -> some View {
         GeometryReader { _ in
-            LineGraph(data: coin.last_7days_price.price)
+            LineGraph(data: coin.last_7days_price.price, profit: coin.price_change > 0)
         }
         .padding(.vertical, 30)
 //        .padding(.horizontal, 20)
