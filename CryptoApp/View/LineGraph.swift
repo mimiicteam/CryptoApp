@@ -11,11 +11,14 @@ import SwiftUI
 struct LineGraph: View {
     // Number of plots
     var data: [Double]
+    var profit: Bool = false
     
     @State var currentPlot = ""
     @State var offset: CGSize = .zero
     @State var showPlot: Bool = false
     @State var translation: CGFloat = 0
+    //MARK: - Animating Graph
+    @State var graphProgress: CGFloat = 0
     var body: some View {
         GeometryReader { proxy in
             
@@ -38,17 +41,12 @@ struct LineGraph: View {
             ZStack {
                 // Converting plot as points....
                 
-                // Path
-                Path { path in
-                    path.move(to: CGPoint(x: 0, y: 0))
-                    path.addLines(points)
-                }
-                .strokedPath(StrokeStyle(lineWidth: 2.6, lineCap: .round, lineJoin: .round))
+                AnimatedPath(progress: graphProgress, points: points)
                 .fill(
                     // Gradient...
                     LinearGradient(colors: [
-                        Color("Gradient1"),
-                        Color("Gradient2")
+                        profit ? Color("Green") : Color("Red"),
+                        profit ? Color("Green") : Color("Red")
                     ], startPoint: .leading, endPoint: .trailing)
                 )
                 
@@ -119,29 +117,53 @@ struct LineGraph: View {
         .overlay(
             VStack(alignment: .leading) {
                 let max = data.max() ?? 0
-                Text("$ \(Int(max))")
+                let min = data.min() ?? 0
+                Text("$ \(max.convertToCurrency())")
                     .font(.caption.bold())
                 
                 Spacer()
                 
-                Text("$ 0")
-                    .font(.caption.bold())
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("$ \(min.convertToCurrency())")
+                        .font(.caption.bold())
+                    
+                    Text("Last 7 Days")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                }
+                .offset(y: 20)
             }
                 .frame(maxWidth: .infinity, alignment: .leading)
         )
         .padding(.horizontal, 10)
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                withAnimation(.easeInOut(duration: 1.5)) {
+                    graphProgress = 1
+                }
+            }
+        }
+        .onChange(of: data) { newValue in
+            graphProgress = 0
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                withAnimation(.easeInOut(duration: 1.5)) {
+                    graphProgress = 1
+                }
+            }
+        }
     }
     @ViewBuilder
     func FillBG() -> some View {
+        let color = profit ? Color("Green") : Color("Red")
         LinearGradient(colors: [
-        Color("Gradient2")
+        color
             .opacity(0.3),
-        Color("Gradient2")
+        color
             .opacity(0.2),
-        Color("Gradient2")
+        color
             .opacity(0.1)
         ]
-        + Array(repeating: Color("Gradient1").opacity(0.1), count: 4)
+        + Array(repeating: color.opacity(0.1), count: 4)
         + Array(repeating: Color.clear, count: 2),
         startPoint: .top, endPoint: .bottom)
     }
@@ -151,5 +173,25 @@ struct LineGraph: View {
 struct LineGraph_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+    }
+}
+
+//MARK: - Animated Path
+struct AnimatedPath: Shape {
+    var progress: CGFloat
+    var points: [CGPoint]
+    var animatableData: CGFloat {
+        get{ return progress }
+        set{ progress = newValue }
+    }
+    
+    func path(in rect: CGRect) -> Path {
+        // Path
+        Path { path in
+            path.move(to: CGPoint(x: 0, y: 0))
+            path.addLines(points)
+        }
+        .trimmedPath(from: 0, to: progress)
+        .strokedPath(StrokeStyle(lineWidth: 2.6, lineCap: .round, lineJoin: .round))
     }
 }
