@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SDWebImageSwiftUI
 
 struct Home: View {
     @State var currentCoin: String = "BTC"
@@ -17,15 +18,16 @@ struct Home: View {
                 //MARK: - Sample UI
                 HStack(spacing: 15) {
                     HStack(spacing: 15) {
-                        Circle()
-                            .fill(.orange)
+                        AnimatedImage(url: URL(string: coin.image))
+                            .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 50, height: 50)
+                            .clipShape(Circle())
                         
                         VStack(alignment: .leading, spacing: 5) {
-                            Text("Bitcoin")
+                            Text(coin.name)
                                 .font(.callout)
-                            Text("BTC")
+                            Text(coin.symbol.uppercased())
                                 .font(.caption)
                                 .foregroundColor(.gray)
                         }
@@ -38,6 +40,12 @@ struct Home: View {
                         .frame(width: 50, height: 50)
                         .aspectRatio(contentMode: .fit)
                         .clipShape(Circle())
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(coin.current_price.convertToCurrency())
+                        .font(.largeTitle.bold())
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 
@@ -133,5 +141,15 @@ struct Home_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
             .previewInterfaceOrientation(.portrait)
+    }
+}
+
+//MARK: - Converting Double to Currency
+extension Double {
+    func convertToCurrency() -> String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        
+        return formatter.string(from: .init(value: self)) ?? ""
     }
 }
